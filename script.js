@@ -15,7 +15,7 @@ if (localStorage.getItem("achievements")) {
 
 function addAchievement() {
   const achievement = achievementInput.value;
-  const date = new Date('2023-02-08');
+  const date = new Date();
   const formattedDate = `${days[date.getUTCDay()]}, ${months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
 
   const existingAchievement = achievements.find((a) => a.achievement === achievement && a.date === formattedDate);
