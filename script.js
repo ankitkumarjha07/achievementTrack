@@ -171,15 +171,15 @@ infoIcon.addEventListener("mouseout", function() {
 
 //OPEN AI implementation
 
-const API_KEY = "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";
+const API_KEY = "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";
  
 async function callOpenAI(prompt){
  showLoader();
- const response = await fetch("https://api.openai.com/v1/engines/text-davinci-003/completions", {
+ const response = await fetch("https://api.openai.com/v1/engines/text-davinci-002/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
+        "Authorization": "Bearer " + API_KEY
       },
       body: JSON.stringify({
         prompt,
