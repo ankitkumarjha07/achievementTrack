@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  <header>
+  <header>    
     <div class="emoji"></div>
     <div class="info-icon" id="info-icon"></div>
     <div class="info-message" id="info-message">Keep adding achievements daily to achieve streaks. Make sure you always
@@ -22,9 +22,20 @@
   <div id="achievements-container">
     <input type="text" id="achievement-input" placeholder="Enter your achievement for the day">
     <button id="add-achievement-button">Add Achievement</button>
+    <div class="error-message hidden" id="error-message"> You must've done something productive today. Please enter the same.</div>
+    <p class="small-info">Please be descriptive about the achievements. We'll recommend you further reading resources based on whatever you achieved today</p>
     <hr>
     <h3>Achievements:</h3>
     <div id="calendar"></div>
+  </div>
+
+
+  <div class="reading-material-container hidden">
+    <h3>Reading Material:</h3>
+    <div class="card">
+      <div class="loader hidden"></div>
+      <div class="reading-material-content" id="recommend"></div>
+    </div>
   </div>
 
   <div class="quote-container">

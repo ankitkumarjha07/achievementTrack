@@ -1,6 +1,10 @@
 const addAchievementButton = document.getElementById("add-achievement-button");
 const achievementInput = document.getElementById("achievement-input");
 const calendar = document.getElementById("calendar");
+const recommend = document.getElementById("recommend");
+// Hide the error message if it was previously shown
+const errorMessage = document.getElementById("error-message");
+
 
 const emoji = document.querySelector(".emoji");
 
@@ -15,9 +19,11 @@ if (localStorage.getItem("achievements")) {
 
 function addAchievement() {
   const achievement = achievementInput.value;
+  if (achievement.trim() !== "") {
+    document.querySelector(".reading-material-container").classList.remove("hidden");
+  }
   const date = new Date();
   const formattedDate = `${days[date.getUTCDay()]}, ${months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
-
   const existingAchievement = achievements.find((a) => a.achievement === achievement && a.date === formattedDate);
   if (existingAchievement) {
     // Show error message if the achievement already exists on the same date
@@ -27,7 +33,7 @@ function addAchievement() {
 
   achievements.push({ achievement, date: formattedDate });
   localStorage.setItem("achievements", JSON.stringify(achievements));
-  
+  callOpenAI('Recommend 5 reading materials and blogs/websites based on '+ achievementInput.value + '. Make the response in 5 li tags and wrap around ul tags. If there are links, wrap it around anchor tag with href. Remove attribute text from response.');
   renderCalendar();
 }
 
@@ -54,7 +60,7 @@ function renderCalendar() {
             </li>
           </ul>
         `;
-  
+       
         calendar.appendChild(day);
       }
     });
@@ -79,10 +85,18 @@ function renderCalendar() {
         updateEmoji();
       });
     });
-  }   
-  addAchievementButton.addEventListener("click", () => {
-    addAchievement();
-    updateEmoji();
+  }
+   
+addAchievementButton.addEventListener("click", () => {
+      if(!achievementInput.value) {
+           errorMessage.style.display='block';
+           achievementInput.classList.add('error');
+           return;
+      }
+      errorMessage.style.display='none';
+      achievementInput.classList.remove('error');
+      addAchievement();
+      updateEmoji();
   });
 
 renderCalendar();
@@ -144,6 +158,8 @@ fetch("https://api.quotable.io/quotes?tag=discipline")
   const infoIcon = document.getElementById("info-icon");
 const infoMessage = document.getElementById("info-message");
 
+// This code displays the information icon and creates a hidden info message. When the information icon is clicked, the info message is displayed, and when the mouse moves away from the icon, the info message is hidden again.
+
 infoIcon.addEventListener("click", function() {
   infoMessage.style.display = "block";
 });
@@ -151,7 +167,42 @@ infoIcon.addEventListener("click", function() {
 infoIcon.addEventListener("mouseout", function() {
   infoMessage.style.display = "none";
 });
-// This code displays the information icon and creates a hidden info message. When the information icon is clicked, the info message is displayed, and when the mouse moves away from the icon, the info message is hidden again.
+
+
+//OPEN AI implementation
+
+const API_KEY = "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";
+ 
+async function callOpenAI(prompt){
+ showLoader();
+ const response = await fetch("https://api.openai.com/v1/engines/text-davinci-003/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer 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"
+      },
+      body: JSON.stringify({
+        prompt,
+        max_tokens: 1000
+      })
+    });
+
+    const result = await response.json();
+    const recommendation = result.choices[0].text;
+    recommend.innerHTML= recommendation;
+    hideLoader();
+}
+
+
+// Add the function to show the loader
+function showLoader() {
+  document.querySelector('.loader').style.display = 'block';
+}
+
+// Add the function to hide the loader
+function hideLoader() {
+  document.querySelector('.loader').style.display = 'none';
+}
 
 
 
